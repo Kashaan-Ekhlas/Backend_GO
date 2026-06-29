@@ -13,7 +13,7 @@ type AuthPayload struct {
 func Login (w http.ResponseWriter, r *http.Request) {
 	var loginPayload AuthPayload
 	err := json.NewDecoder(r.Body).Decode(&loginPayload)
-	if (err != nil){
+	if (err != nil || loginPayload.Email == "" || loginPayload.Password == "") {
 		http.Error(w, "Invalid JSON Body", http.StatusBadRequest)
 		return
 	}
@@ -23,7 +23,7 @@ func Login (w http.ResponseWriter, r *http.Request) {
 func Register (w http.ResponseWriter, r *http.Request){
 	var registerPayload AuthPayload
 	err := json.NewDecoder(r.Body).Decode(&registerPayload)
-	if (err != nil){
+	if (err != nil || registerPayload.Email == "" || registerPayload.Password == ""){
 		http.Error(w, "Invalid JSON Body", http.StatusBadRequest)
 		return
 	}
