@@ -1,3 +1,4 @@
 main
 backend/names.txt
 .env
+frontend/node_modules
