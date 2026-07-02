@@ -42,9 +42,14 @@ func passwordFormatCheck(password string) error {
 func validatePayload(body io.ReadCloser) (AuthPayload, error) {
 	var authPayload AuthPayload
 
-	err := json.NewDecoder(body).Decode(&authPayload)
-	if err != nil {
+	decoder := json.NewDecoder(body)
+
+	if err := json.NewDecoder(body).Decode(&authPayload); err != nil {
 		return authPayload, err
+	}
+
+	if err := decoder.Decode(&struct{}{}); err != io.EOF {
+		return authPayload, errors.New("invalid json")
 	}
 
 	authPayload.Email = strings.TrimSpace(authPayload.Email)
