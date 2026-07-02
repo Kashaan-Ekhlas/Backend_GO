@@ -2,15 +2,21 @@ package health
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
 )
 
-type Health struct {
-	Status string `json:"status"`
-	UpTime string `json:"uptime"`
+type UptimeDetails struct {
+	Days    int `json:"days"`
+	Hours   int `json:"hours"`
+	Minutes int `json:"minutes"`
+	Seconds int `json:"seconds"`
+}
+
+type HealthResponse struct {
+	Status string        `json:"status"`
+	UpTime UptimeDetails `json:"uptime"`
 }
 
 var startTime = time.Now()
@@ -22,9 +28,14 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	minutes := int(totalTime.Minutes()) % 60
 	seconds := int(totalTime.Seconds()) % 60
 
-	health := Health{
+	health := HealthResponse{
 		Status: "ok",
-		UpTime: fmt.Sprintf("App Uptime: %dd %dh %dm %ds", days, hours, minutes, seconds),
+		UpTime: UptimeDetails{
+			Days:    days,
+			Hours:   hours,
+			Minutes: minutes,
+			Seconds: seconds,
+		},
 	}
 
 	w.Header().Set("Content-Type", "application/json")
